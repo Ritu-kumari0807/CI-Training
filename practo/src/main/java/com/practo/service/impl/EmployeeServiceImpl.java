@@ -85,6 +85,34 @@ public class EmployeeServiceImpl implements EmployeeService {
 
          return employeePage.map(employee -> modelmapper.map(employee, EmployeeDto.class));
      }
+    @Override
+    public EmployeeDto updateEmployeeById(Long id,EmployeeDto employeeDto) {
+        Employee employee = employeeRepository.findById(id).orElseThrow(
+                ()->new ResourceNotFoundException("Employee not found with id "+id)
+        );
+
+//        Post post = postRepo.findById(id).orElseThrow(
+//                () -> new ResourceNotFoundException(id)
+//        );
+//
+//        Post updatedPost = mapToEntity(postDto);
+//        updatedPost.setId(post.getId());
+//        Post updatedPostInfo=postRepo.save(updatedPost);
+//        return mapToDto(updatedPostInfo);
+
+           Employee updatedemployee = mapToEntity(employeeDto);
+        updatedemployee.setId(employee.getId());
+        updatedemployee.setFirstName(employeeDto.getFirstName());
+        updatedemployee.setLastName(employeeDto.getLastName());
+        updatedemployee.setEmail(employeeDto.getEmail());
+        updatedemployee.setDepartment(employeeDto.getDepartment());
+        updatedemployee.setSalary(employeeDto.getSalary());
+        updatedemployee.setAddress((employeeDto.getAddress()));
+        updatedemployee.setPhoneNumber(employeeDto.getPhoneNumber());
+          Employee updatedEmployeeInfo=employeeRepository.save(updatedemployee);
+        return mapToDto(updatedEmployeeInfo);
+
+    }
 
     @Override
     public void deleteById(long id)
@@ -94,8 +122,6 @@ public class EmployeeServiceImpl implements EmployeeService {
         );
         employeeRepository.deleteById(id);
     }
-
-
     //  converting from DTO to Entity using Model Mapper
         Employee mapToEntity(EmployeeDto employeeDto)
         {

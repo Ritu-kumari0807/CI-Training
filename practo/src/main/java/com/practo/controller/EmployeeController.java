@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.xml.ws.Response;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,8 +19,8 @@ public class EmployeeController {
        @Autowired
         private EmployeeService employeeService;
 
-//       adding the employee
-//    http://localhost:8080/api/employee/add
+       //adding the employee
+      //http://localhost:8080/api/employee/add
         @PostMapping("/add")
         public ResponseEntity <EmployeeDto> createEmployee(@RequestBody EmployeeDto employeeDto)
         {
@@ -28,16 +29,16 @@ public class EmployeeController {
             return new ResponseEntity<>(savedEmployee, HttpStatus.CREATED);
 
         }
-//getting employee by ID
-//    http://localhost:8080/api/employee/{id}
+    //getting employee by ID
+   // http://localhost:8080/api/employee/{id}
     @GetMapping("/{id}")
     public ResponseEntity<EmployeeDto> getEmployeeById(@PathVariable Long id)
     {
         EmployeeDto employeeById = employeeService.getEmployeeById(id);
         return new ResponseEntity<>(employeeById,HttpStatus.OK);
     }
-//getting all employee
-//    http://localhost:8080/api/employee/all
+    //getting all employee
+   //http://localhost:8080/api/employee/all
     @GetMapping("/all")
     public List<EmployeeDto> getAllEmployees()
     {
@@ -45,8 +46,8 @@ public class EmployeeController {
         return employeeDtos;
     }
 
-//    getting employee from pagination
-//    http://localhost:8080/api/employee/page?pageNo=0&pageSize=5&sortBy=id&sortDir=asc
+     //getting employee from pagination
+    // http://localhost:8080/api/employee/page?pageNo=0&pageSize=5&sortBy=id&sortDir=asc
     @GetMapping("/page")
     public Page<EmployeeDto> getAllEmployees(
             @RequestParam(value = "pageNo",defaultValue = "0",required = false)int pageNo,
@@ -59,7 +60,15 @@ public class EmployeeController {
         return postDtos;
 
     }
-//    delete employeeBYId
+    //    updating employee
+    //    http://localhost:8080/api/employee/update/{id}
+    @PutMapping("/update/{id}")
+    public ResponseEntity<EmployeeDto> updateEmployee(@PathVariable("id") long id,@RequestBody EmployeeDto employeeDto)
+    {
+       EmployeeDto updatedemployee= employeeService.updateEmployeeById(id,employeeDto);
+       return new ResponseEntity<>(updatedemployee,HttpStatus.OK);
+    }
+    //    delete employeeBYId
     //    http://localhost:8080/api/employee/delete/{id}
 
     @DeleteMapping("/delete/{id}")
@@ -69,6 +78,6 @@ public class EmployeeController {
         return new ResponseEntity<>("Employee  Deleted Successfully",HttpStatus.OK);
 
     }
-    }
+}
 
 

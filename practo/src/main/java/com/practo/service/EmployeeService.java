@@ -13,13 +13,14 @@ public interface EmployeeService {
 
     public EmployeeDto addEmployee(EmployeeDto employeeDto);
 
-//    public Optional<Employee> getEmployeeById(Long id);
-public EmployeeDto getEmployeeById(Long id);
+    public EmployeeDto getEmployeeById(Long id);
 
 
     public List<EmployeeDto> getAllEmployees();
 
     public Page<EmployeeDto> getAllEmployees(int pageNo, int pageSize, String sortBy, String sortDir);
 
-  public void deleteById(long id);
+    public void deleteById(long id);
+
+    public EmployeeDto updateEmployeeById(Long id,EmployeeDto employeeDto);
 }
