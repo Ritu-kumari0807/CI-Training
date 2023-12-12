@@ -1,5 +1,6 @@
 package com.practo.service.impl;
 
+import com.practo.Exception.DuplicateEntryException;
 import com.practo.Exception.ResourceNotFoundException;
 import com.practo.entity.Employee;
 import com.practo.mapper.EmployeeMapper;
@@ -33,8 +34,16 @@ public class EmployeeServiceImpl implements EmployeeService
 
         //overriding the addEmployee method
         @Override
-        public EmployeeDto addEmployee(EmployeeDto employeeDto)
+        public EmployeeDto addEmployee(EmployeeDto employeeDto)throws DuplicateEntryException
         {
+            if(employeeRepository.existsByEmail(employeeDto.getEmail()))
+            {
+                throw new DuplicateEntryException("email already present");
+            }
+            if(employeeRepository.existsByPhoneNumber(employeeDto.getPhoneNumber()))
+            {
+                throw new DuplicateEntryException("phone number already present");
+            }
         Employee employee = EmployeeMapper.mapToEmployee(employeeDto);
         Employee savedEmployee=employeeRepository.save(employee);
         EmployeeDto dto=EmployeeMapper.mapToEmployeeDto(savedEmployee);

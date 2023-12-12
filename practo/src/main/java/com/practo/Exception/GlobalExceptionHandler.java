@@ -32,4 +32,9 @@ public class GlobalExceptionHandler
         });
         return new ResponseEntity<>(errorMap,HttpStatus.BAD_REQUEST);
     }
+    @ExceptionHandler(DuplicateEntryException.class)
+    public ResponseEntity<String> handleDuplicateEntityException(DuplicateEntryException e)
+    {
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+    }
 }

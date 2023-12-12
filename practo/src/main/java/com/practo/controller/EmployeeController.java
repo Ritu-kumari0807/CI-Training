@@ -1,5 +1,6 @@
 package com.practo.controller;
 
+import com.practo.Exception.DuplicateEntryException;
 import com.practo.payload.EmployeeDto;
 import com.practo.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +21,7 @@ public class EmployeeController {
        //adding the employee
       //http://localhost:8080/api/employee/add
         @PostMapping("/add")
-        public ResponseEntity <EmployeeDto> createEmployee(@Valid @RequestBody EmployeeDto employeeDto)
+        public ResponseEntity <EmployeeDto> createEmployee(@Valid @RequestBody EmployeeDto employeeDto)throws DuplicateEntryException
         {
 
             EmployeeDto savedEmployee=employeeService.addEmployee(employeeDto);
