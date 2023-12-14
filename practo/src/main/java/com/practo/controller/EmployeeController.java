@@ -64,7 +64,7 @@ public class EmployeeController {
         //    updating employee
         //    http://localhost:8080/api/employee/update/{id}
         @PutMapping("/update/{id}")
-       public ResponseEntity<EmployeeDto> updateEmployee(@PathVariable("id") long id,@RequestBody EmployeeDto employeeDto)
+       public ResponseEntity<EmployeeDto> updateEmployee(@PathVariable("id") long id,@RequestBody EmployeeDto employeeDto)throws DuplicateEntryException
        {
        EmployeeDto updatedemployee= employeeService.updateEmployeeById(id,employeeDto);
        return new ResponseEntity<>(updatedemployee,HttpStatus.OK);

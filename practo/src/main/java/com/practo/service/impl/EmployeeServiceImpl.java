@@ -40,7 +40,7 @@ public class EmployeeServiceImpl implements EmployeeService
             {
                 throw new DuplicateEntryException("email already present");
             }
-            if(employeeRepository.existsByPhoneNumber(employeeDto.getPhoneNumber()))
+            if(employeeRepository.existsByPhoneNumber(employeeDto.getPhoneNumber() ))
             {
                 throw new DuplicateEntryException("phone number already present");
             }
@@ -72,6 +72,7 @@ public class EmployeeServiceImpl implements EmployeeService
              return employeeDto;
         }
 
+
        //overriding the getAllEmployee method and implementing pagination
        @Override
        public Page<EmployeeDto> getAllEmployees(int pageNo, int pageSize, String sortBy, String sortDir)
@@ -85,26 +86,53 @@ public class EmployeeServiceImpl implements EmployeeService
        }
        //overriding the updateEmployeeById method
        @Override
-       public EmployeeDto updateEmployeeById(Long id,EmployeeDto employeeDto)
+       public EmployeeDto updateEmployeeById(Long id,EmployeeDto employeeDto)throws DuplicateEntryException
        {
              Employee employee = employeeRepository.findById(id).orElseThrow(
                                   ()->new ResourceNotFoundException("Employee not found with id "+id));
 
-              Employee updatedemployee = mapToEntity(employeeDto);
-              updatedemployee.setId(employee.getId());
-              updatedemployee.setFirstName(employeeDto.getFirstName());
-              updatedemployee.setLastName(employeeDto.getLastName());
-              updatedemployee.setEmail(employeeDto.getEmail());
-              updatedemployee.setDepartment(employeeDto.getDepartment());
-              updatedemployee.setSalary(employeeDto.getSalary());
-              updatedemployee.setAddress((employeeDto.getAddress()));
-              updatedemployee.setPhoneNumber(employeeDto.getPhoneNumber());
 
-              Employee updatedEmployeeInfo=employeeRepository.save(updatedemployee);
+           if (employeeRepository.existsByEmailAndIdNot(employeeDto.getEmail(), id)) {
+               throw new DuplicateEntryException("Email already exists for another employee.");
+           }
+
+           if (employeeRepository.existsByPhoneNumberAndIdNot(employeeDto.getPhoneNumber(), id)) {
+               throw new DuplicateEntryException("Phone number already exists for another employee.");
+           }
+           employee.setFirstName(employeeDto.getFirstName());
+           employee.setLastName(employeeDto.getLastName());
+           employee.setDepartment(employeeDto.getDepartment());
+           employee.setSalary(employeeDto.getSalary());
+           employee.setAddress((employeeDto.getAddress()));
+
+              Employee updatedEmployeeInfo=employeeRepository.save(employee);
               return mapToDto(updatedEmployeeInfo);
 
        }
-       // overriding the deleteById method
+
+        private void checkDuplicateEmail(String email)throws DuplicateEntryException
+        {
+            //check mobileNumber is already present or not
+            if (employeeRepository.existsByEmail(email))
+            {
+                //Handle the case where the employee with the given mobileNumber is already exist
+                throw new DuplicateEntryException("Email is already present");
+            }
+        }
+
+        private void checkDuplicatePhoneNumber(String phoneNumber)throws DuplicateEntryException
+        {
+            //check mobileNumber is already present or not
+            if (employeeRepository.existsByPhoneNumber(phoneNumber))
+            {
+                //Handle the case where the employee with the given mobileNumber is already exist
+                throw new DuplicateEntryException("Phone number is already present");
+            }
+        }
+
+
+
+    // overriding the deleteById method
         @Override
         public void deleteById(long id)
         {

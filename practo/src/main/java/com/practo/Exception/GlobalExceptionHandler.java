@@ -13,10 +13,10 @@ import java.util.Map;
 public class GlobalExceptionHandler
 {
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<String> handleException(Exception e)
-    {
-        return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-    }
+        public ResponseEntity<String> handleException(Exception e)
+        {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
 
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<String> handleResourceNotFoundException(Exception e)
@@ -36,5 +36,10 @@ public class GlobalExceptionHandler
     public ResponseEntity<String> handleDuplicateEntityException(DuplicateEntryException e)
     {
         return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+    @ExceptionHandler(AttendanceNotFoundException.class)
+    public ResponseEntity<String> AttendanceNotFoundException(AttendanceNotFoundException e)
+    {
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
     }
 }
