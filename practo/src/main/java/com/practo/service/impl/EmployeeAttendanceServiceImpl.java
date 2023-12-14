@@ -52,9 +52,9 @@ public class EmployeeAttendanceServiceImpl implements EmployeeAttendanceService 
 
     // method to check employeeId is already present or not
     private void checkForDuplicateEmployeeId(long employeeId) throws DuplicateEntryException {
-        //check ema_employeeId is already present or not
+        //check employeeId is already present or not
         if (employeeAttendanceRepository.existsByEmployeeId(employeeId)) {
-            //Handle the case where the employee with the given ema_employeeId is already exist
+            //Handle the case where the employee with the given employeeId is already exist
             throw new DuplicateEntryException("employeeId is already present");
         }
     }
@@ -65,7 +65,7 @@ public class EmployeeAttendanceServiceImpl implements EmployeeAttendanceService 
         Pageable pageable = PageRequest.of(pageNo, pageSize);
         return employeeAttendanceRepository.findAll(pageable).map(this::convertToDTO);
     }
-
+    //method to employeeAttandance getById
     @Override
     public EmployeeAttendanceDTO getEmployeeAttendanceById(Long id) {
         EmployeeAttendance attendance = employeeAttendanceRepository.findById(id)
@@ -73,9 +73,7 @@ public class EmployeeAttendanceServiceImpl implements EmployeeAttendanceService 
         return convertToDTO(attendance);
     }
     //method to update employeeAttandance
-    @Override
-    public EmployeeAttendanceDTO updateEmployeeAttendance(Long id, EmployeeAttendanceDTO attendanceDTO) throws DuplicateEntryException {
-//        Optional<EmployeeAttendance> optionalAttendance = employeeAttendanceRepository.findById(id);
+    @Override public EmployeeAttendanceDTO updateEmployeeAttendance(Long id, EmployeeAttendanceDTO attendanceDTO) throws DuplicateEntryException {
         EmployeeAttendance existingEmployee= employeeAttendanceRepository.findById(id).orElseThrow(
                 () -> new ResourceNotFoundException("Employee not present")
         );
@@ -85,9 +83,7 @@ public class EmployeeAttendanceServiceImpl implements EmployeeAttendanceService 
         EmployeeAttendance updatedAttendance = employeeAttendanceRepository.save(existingEmployee);
             return convertToDTO(updatedAttendance);
     }
-
-     //method to Delete employeeAttandance
-
+    //method to Delete employeeAttandance
     @Override
     public void deleteEmployeeAttendance(Long id) {
         EmployeeAttendance deleteAttendance = employeeAttendanceRepository.findById(id).orElseThrow(

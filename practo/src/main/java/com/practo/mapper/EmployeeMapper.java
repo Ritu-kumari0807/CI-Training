@@ -6,7 +6,8 @@ import com.practo.payload.EmployeeDto;
 public class EmployeeMapper
 {
     // Convert User JPA Entity into UserDto
-    public static EmployeeDto mapToEmployeeDto(Employee employee){
+    public static EmployeeDto mapToEmployeeDto(Employee employee)
+    {
         EmployeeDto userDto = new EmployeeDto(
                 employee.getId(),
                 employee.getFirstName(),
