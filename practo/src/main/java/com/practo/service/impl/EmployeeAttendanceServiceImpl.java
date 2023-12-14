@@ -65,12 +65,7 @@ public class EmployeeAttendanceServiceImpl implements EmployeeAttendanceService 
         Pageable pageable = PageRequest.of(pageNo, pageSize);
         return employeeAttendanceRepository.findAll(pageable).map(this::convertToDTO);
     }
-//    @Override
-//    public Page<EmployeeAttendanceDTO> getAllEmployeeAttendances(Pageable pageable) {
-//        return employeeAttendanceRepository.findAll(pageable)
-//                .map(this::convertToDTO);
-//    }
-    //method to get  employeeAttandance by id
+
     @Override
     public EmployeeAttendanceDTO getEmployeeAttendanceById(Long id) {
         EmployeeAttendance attendance = employeeAttendanceRepository.findById(id)
