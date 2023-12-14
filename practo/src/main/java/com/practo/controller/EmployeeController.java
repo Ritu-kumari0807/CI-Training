@@ -47,7 +47,7 @@ public class EmployeeController {
        }
 
        //getting employee from pagination
-      // http://localhost:8080/api/employee/page?pageNo=0&pageSize=5&sortBy=id&sortDir=asc
+      // http://localhost:8080/api/employee/page?pageNo=0&pageSize=5
        @GetMapping("/page")
        public Page<EmployeeDto> getAllEmployees(
             @RequestParam(value = "pageNo",defaultValue = "0",required = false)int pageNo,

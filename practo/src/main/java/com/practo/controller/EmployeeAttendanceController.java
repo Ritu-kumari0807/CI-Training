@@ -28,10 +28,12 @@ public class EmployeeAttendanceController {
         EmployeeAttendanceDTO createdAttendance = attendanceService.addEmployeeAttendance(attendanceDTO);
         return new ResponseEntity<>(createdAttendance, HttpStatus.CREATED);
     }
-    // http://localhost:8080/employeeattendance/all
+    // http://localhost:8080/employeeattendance/all?pageNo=0&pageSize=5&sortBy=id&sortDir=asc
+
     @GetMapping("/all")
-    public ResponseEntity<Page<EmployeeAttendanceDTO>> getAllEmployeeAttendances(Pageable pageable) {
-        Page<EmployeeAttendanceDTO> attendances = attendanceService.getAllEmployeeAttendances(pageable);
+    public ResponseEntity<Page<EmployeeAttendanceDTO>> getAllEmployeeAttendances(@RequestParam(defaultValue = "0") int pageNo,
+                                                                                 @RequestParam(defaultValue = "10") int pageSize) {
+        Page<EmployeeAttendanceDTO> attendances = attendanceService.getAllEmployeeAttendance(pageNo,pageSize);
         return new ResponseEntity<>(attendances, HttpStatus.OK);
     }
     // http://localhost:8080/employeeattendance/{id}

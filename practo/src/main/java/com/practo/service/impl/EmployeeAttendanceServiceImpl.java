@@ -3,14 +3,18 @@ package com.practo.service.impl;
 import com.practo.Exception.AttendanceNotFoundException;
 import com.practo.Exception.DuplicateEntryException;
 import com.practo.Exception.ResourceNotFoundException;
+import com.practo.entity.Employee;
 import com.practo.entity.EmployeeAttendance;
 import com.practo.payload.EmployeeAttendanceDTO;
+import com.practo.payload.EmployeeDto;
 import com.practo.repository.EmployeeAttendanceRepository;
 import com.practo.service.EmployeeAttendanceService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -56,10 +60,16 @@ public class EmployeeAttendanceServiceImpl implements EmployeeAttendanceService 
     }
     //method to get All employeeAttandance
     @Override
-    public Page<EmployeeAttendanceDTO> getAllEmployeeAttendances(Pageable pageable) {
-        return employeeAttendanceRepository.findAll(pageable)
-                .map(this::convertToDTO);
+    public Page<EmployeeAttendanceDTO> getAllEmployeeAttendance(int pageNo, int pageSize)
+    {
+        Pageable pageable = PageRequest.of(pageNo, pageSize);
+        return employeeAttendanceRepository.findAll(pageable).map(this::convertToDTO);
     }
+//    @Override
+//    public Page<EmployeeAttendanceDTO> getAllEmployeeAttendances(Pageable pageable) {
+//        return employeeAttendanceRepository.findAll(pageable)
+//                .map(this::convertToDTO);
+//    }
     //method to get  employeeAttandance by id
     @Override
     public EmployeeAttendanceDTO getEmployeeAttendanceById(Long id) {
