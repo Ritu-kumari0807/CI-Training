@@ -1,5 +1,6 @@
 package com.practo.service;
 
+import com.practo.exception.BadRequestException;
 import com.practo.exception.DuplicateEntryException;
 import com.practo.payload.EmployeeDto;
 import org.springframework.data.domain.Page;
@@ -10,7 +11,7 @@ public interface EmployeeService {
 
 //    unimplemented methods
 
-    public EmployeeDto addEmployee(EmployeeDto employeeDto) throws DuplicateEntryException;
+    public EmployeeDto addEmployee(EmployeeDto employeeDto) throws DuplicateEntryException, BadRequestException;
 
     public EmployeeDto getEmployeeById(Long id);
 

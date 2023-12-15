@@ -10,8 +10,10 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
 
     boolean existsByPhoneNumber(String phoneNumber);
 
-    boolean existsByEmailAndIdNot(String email, Long id);
+    Employee findByPhoneNumber(String phoneNumber);
 
-    boolean existsByPhoneNumberAndIdNot(String phoneNumber, Long id);
+    Employee findByEmail(String email);
+
+    Employee findByFirstName(String firstName);
 
 }

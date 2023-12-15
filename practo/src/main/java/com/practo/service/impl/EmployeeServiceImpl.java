@@ -1,5 +1,6 @@
 package com.practo.service.impl;
 
+import com.practo.exception.BadRequestException;
 import com.practo.exception.DuplicateEntryException;
 import com.practo.exception.ResourceNotFoundException;
 import com.practo.entity.Employee;
@@ -7,6 +8,8 @@ import com.practo.mapper.EmployeeMapper;
 import com.practo.payload.EmployeeDto;
 import com.practo.repository.EmployeeRepository;
 import com.practo.service.EmployeeService;
+import jdk.internal.org.objectweb.asm.commons.Remapper;
+import org.apache.catalina.mapper.Mapper;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -33,17 +36,50 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     //overriding the addEmployee method
     @Override
-    public EmployeeDto addEmployee(EmployeeDto employeeDto) throws DuplicateEntryException {
-        if (employeeRepository.existsByEmail(employeeDto.getEmail())) {
-            throw new DuplicateEntryException("email already present");
+    public EmployeeDto addEmployee(EmployeeDto employeeDto) throws DuplicateEntryException, BadRequestException {
+
+        Employee employee = new Employee();
+
+        // Update employee details
+        if (employeeDto.getFirstName() != null) {
+            employee.setFirstName(employeeDto.getFirstName());
+        } else {
+            throw new BadRequestException("firstname field must be provided for update");
         }
-        if (employeeRepository.existsByPhoneNumber(employeeDto.getPhoneNumber())) {
-            throw new DuplicateEntryException("phone number already present");
+
+        if (employeeDto.getEmail() != null) {
+            employee.setEmail(employeeDto.getEmail());
+        } else {
+            throw new BadRequestException("email field must be provided for update");
         }
-        Employee employee = EmployeeMapper.mapToEmployee(employeeDto);
+
+        if (employeeDto.getPhoneNumber() != null) {
+            employee.setPhoneNumber(employeeDto.getPhoneNumber());
+        } else {
+            throw new BadRequestException("PhoneNumber field must be provided for update");
+        }
+
+        if (employeeDto.getLastName() != null) {
+            employee.setLastName(employeeDto.getLastName());
+        } else {
+            throw new BadRequestException("lastname field must be provided for update");
+        }
+
+        if (employeeDto.getSalary() != 0) {
+            employee.setSalary(employeeDto.getSalary());
+        } else {
+            throw new BadRequestException("salary fields must be provided for update");
+        }
+
+        if (employeeDto.getDepartment() != null) {
+            employee.setDepartment(employeeDto.getDepartment());
+        } else {
+            throw new BadRequestException("department fields must be provided for update");
+        }
+
+        //save an employee into DB
         Employee savedEmployee = employeeRepository.save(employee);
-        EmployeeDto dto = EmployeeMapper.mapToEmployeeDto(savedEmployee);
-        return dto;
+        return EmployeeMapper.mapToEmployeeDto(savedEmployee);
     }
 
     //overriding the getEmployeeById method
@@ -77,33 +113,89 @@ public class EmployeeServiceImpl implements EmployeeService {
         return employeePage.map(employee -> modelmapper.map(employee, EmployeeDto.class));
     }
 
+    // overriding the deleteById method
+    @Override
+    public void deleteById(long id) {
+        Employee employee = employeeRepository.findById(id).orElseThrow(
+                () -> new ResourceNotFoundException("Employee not found with id " + id));
+        employeeRepository.deleteById(id);
+    }
+
     //overriding the updateEmployeeById method
     @Override
     public EmployeeDto updateEmployeeById(Long id, EmployeeDto employeeDto) throws DuplicateEntryException {
         Employee employee = employeeRepository.findById(id).orElseThrow(
                 () -> new ResourceNotFoundException("Employee not found with id " + id));
 
-        if (!employee.getEmail().equals(employeeDto.getEmail()) &&
-                employeeRepository.existsByEmailAndIdNot(employeeDto.getEmail(), id)) {
-            throw new DuplicateEntryException("Email already exists for another employee.");
-        }
-        if (!employee.getPhoneNumber().equals(employeeDto.getPhoneNumber()) &&
-                employeeRepository.existsByPhoneNumberAndIdNot(employeeDto.getPhoneNumber(), id)) {
-            throw new DuplicateEntryException("Phone number already exists for another employee.");
+        // Update employee details
+        if (employeeDto.getFirstName() != null) {
+            checkForDuplicateFirstName(employeeDto.getFirstName(), id);
+            employee.setFirstName(employeeDto.getFirstName());
+        } else {
+            throw new BadRequestException("firstname field must be provided for update");
         }
 
-        employee.setFirstName(employeeDto.getFirstName());
-        employee.setLastName(employeeDto.getLastName());
-        employee.setDepartment(employeeDto.getDepartment());
-        employee.setEmail(employeeDto.getEmail());
-        employee.setSalary(employeeDto.getSalary());
-        employee.setAddress((employeeDto.getAddress()));
-        employee.setPhoneNumber(employeeDto.getPhoneNumber());
+        if (employeeDto.getEmail() != null) {
+            checkForDuplicateEmail(employeeDto.getEmail(), id);
+            employee.setEmail(employeeDto.getEmail());
+        } else {
+            throw new BadRequestException("email field must be provided for update");
+        }
 
-        Employee updatedEmployeeInfo = employeeRepository.save(employee);
-        return mapToDto(updatedEmployeeInfo);
+        if (employeeDto.getPhoneNumber() != null) {
+            checkForDuplicatePhoneNumber(employeeDto.getPhoneNumber(), id);
+            employee.setPhoneNumber(employeeDto.getPhoneNumber());
+        } else {
+            throw new BadRequestException("PhoneNumber field must be provided for update");
+        }
+
+        if (employeeDto.getLastName() != null) {
+            employee.setLastName(employeeDto.getLastName());
+        } else {
+            throw new BadRequestException("lastname field must be provided for update");
+        }
+
+        if (employeeDto.getSalary() != 0) {
+            employee.setSalary(employeeDto.getSalary());
+        } else {
+            throw new BadRequestException("salary fields must be provided for update");
+        }
+
+        if (employeeDto.getDepartment() != null) {
+            employee.setDepartment(employeeDto.getDepartment());
+        } else {
+            throw new BadRequestException("department fields must be provided for update");
+        }
+        // Save the updated employee
+        Employee savedEmployee = employeeRepository.save(employee);
+
+        return EmployeeMapper.mapToEmployeeDto(savedEmployee);
+    }
+    
+    private void checkForDuplicateEmail(String email, Long id) throws DuplicateEntryException {
+        //check email is already present or not
+        Employee existingEmployee = employeeRepository.findByEmail(email);
+        if (existingEmployee != null && existingEmployee.getId() != id) {
+            throw new DuplicateEntryException("Email " + email + " is already associated with another employee");
+        }
 
     }
+
+    private void checkForDuplicatePhoneNumber(String phoneNumber, Long id) throws DuplicateEntryException {
+        //check mobileNumber is already present or not
+        Employee existingEmployee = employeeRepository.findByPhoneNumber(phoneNumber);
+        if (existingEmployee != null && existingEmployee.getId() != id) {
+            throw new DuplicateEntryException("Phone number " + phoneNumber + " is already associated with another employee");
+        }
+    }
+
+    private void checkForDuplicateFirstName(String firstName, Long id) throws DuplicateEntryException {
+        Employee existingEmployee = employeeRepository.findByFirstName(firstName);
+        if (existingEmployee != null && existingEmployee.getId() != id) {
+            throw new DuplicateEntryException("First name " + firstName + " is already associated with another employee");
+        }
+    }
+
     private void checkDuplicateEmail(String email) throws DuplicateEntryException {
         //check mobileNumber is already present or not
         if (employeeRepository.existsByEmail(email)) {
@@ -120,13 +212,6 @@ public class EmployeeServiceImpl implements EmployeeService {
         }
     }
 
-    // overriding the deleteById method
-    @Override
-    public void deleteById(long id) {
-        Employee employee = employeeRepository.findById(id).orElseThrow(
-                () -> new ResourceNotFoundException("Employee not found with id " + id));
-        employeeRepository.deleteById(id);
-    }
 
     //  converting from DTO to Entity using Model Mapper
     Employee mapToEntity(EmployeeDto employeeDto) {
@@ -141,4 +226,5 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     }
 }
+
 

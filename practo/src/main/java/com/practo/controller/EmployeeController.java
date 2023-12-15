@@ -1,5 +1,7 @@
 package com.practo.controller;
 
+import com.practo.entity.Employee;
+import com.practo.exception.BadRequestException;
 import com.practo.exception.DuplicateEntryException;
 import com.practo.payload.EmployeeDto;
 import com.practo.service.EmployeeService;
@@ -7,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -20,7 +23,7 @@ public class EmployeeController {
 
     //http://localhost:8080/api/employee/add
     @PostMapping("/add")
-    public ResponseEntity<EmployeeDto> createEmployee(@Valid @RequestBody EmployeeDto employeeDto) throws DuplicateEntryException {
+    public ResponseEntity<EmployeeDto> createEmployee(@Valid @RequestBody EmployeeDto employeeDto) throws DuplicateEntryException, BadRequestException {
 
         EmployeeDto savedEmployee = employeeService.addEmployee(employeeDto);
         return new ResponseEntity<>(savedEmployee, HttpStatus.CREATED);

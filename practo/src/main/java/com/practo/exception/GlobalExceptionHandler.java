@@ -34,6 +34,10 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> handleDuplicateEntityException(DuplicateEntryException e) {
         return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
     }
+    @ExceptionHandler(BadRequestException.class)
+    public ResponseEntity<String> handleBadRequestException(BadRequestException e) {
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+    }
 
     @ExceptionHandler(AttendanceNotFoundException.class)
     public ResponseEntity<String> AttendanceNotFoundException(AttendanceNotFoundException e) {

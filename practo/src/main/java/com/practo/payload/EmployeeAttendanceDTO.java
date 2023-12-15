@@ -19,7 +19,6 @@ public class EmployeeAttendanceDTO {
     private Long id;
 
     @NotNull(message = "Employee ID cannot be null")
-    @Positive(message = "Employee ID must be a positive number")
     private Long employeeId;
 
     @NotNull(message = "Date cannot be null")
