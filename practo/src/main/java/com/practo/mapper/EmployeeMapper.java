@@ -3,11 +3,10 @@ package com.practo.mapper;
 import com.practo.entity.Employee;
 import com.practo.payload.EmployeeDto;
 
-public class EmployeeMapper
-{
-    // Convert User JPA Entity into UserDto
-    public static EmployeeDto mapToEmployeeDto(Employee employee)
-    {
+public class EmployeeMapper {
+
+    // Convert User Entity into UserDto
+    public static EmployeeDto mapToEmployeeDto(Employee employee) {
         EmployeeDto userDto = new EmployeeDto(
                 employee.getId(),
                 employee.getFirstName(),
@@ -23,19 +22,18 @@ public class EmployeeMapper
     }
 
     // Convert UserDto into User JPA Entity
-    public static Employee mapToEmployee(EmployeeDto employeeDto)
-        {
-            Employee employee = new Employee(
-                    employeeDto.getId(),
-                    employeeDto.getFirstName(),
-                    employeeDto.getLastName(),
-                    employeeDto.getEmail(),
-                    employeeDto.getDepartment(),
-                    employeeDto.getSalary(),
-                    employeeDto.getAddress(),
-                    employeeDto.getPhoneNumber()
+    public static Employee mapToEmployee(EmployeeDto employeeDto) {
+        Employee employee = new Employee(
+                employeeDto.getId(),
+                employeeDto.getFirstName(),
+                employeeDto.getLastName(),
+                employeeDto.getEmail(),
+                employeeDto.getDepartment(),
+                employeeDto.getSalary(),
+                employeeDto.getAddress(),
+                employeeDto.getPhoneNumber()
 
-            );
-            return employee;
-        }
+        );
+        return employee;
+    }
 }

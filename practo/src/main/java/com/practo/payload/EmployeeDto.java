@@ -10,8 +10,7 @@ import javax.validation.constraints.*;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class EmployeeDto
-{
+public class EmployeeDto {
     @Id
     private Long id;
 
@@ -32,7 +31,7 @@ public class EmployeeDto
     @Size(max = 50, message = "Department must be less than 50 characters")
     private String department;
 
-    @Size(max =10, message = "Address must be less than 100 characters")
+    @Size(max = 10, message = "Address must be less than 100 characters")
     private String address;
 
     @Pattern(regexp = "\\d{10}", message = "Phone number must be 10 digits")

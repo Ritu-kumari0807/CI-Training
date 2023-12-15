@@ -1,7 +1,6 @@
 package com.practo.dictionary;
 
-public enum EmployeeAttendanceStatus
-    {
-        ABSENT,
-        PRESENT
-    }
+public enum EmployeeAttendanceStatus {
+    ABSENT,
+    PRESENT
+}
