@@ -31,7 +31,6 @@ public class EmployeeAttendanceServiceImpl implements EmployeeAttendanceService 
     @Override
     public EmployeeAttendanceDTO addEmployeeAttendance(EmployeeAttendanceDTO attendanceDTO) throws DuplicateEntryException {
 
-        //  check for null fields
         // Check for duplicate getEmployeeId
         checkForDuplicateEmployeeId(attendanceDTO.getEmployeeId());
         EmployeeAttendance attendance = convertToEntity(attendanceDTO);

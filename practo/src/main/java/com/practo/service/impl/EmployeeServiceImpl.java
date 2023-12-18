@@ -76,6 +76,11 @@ public class EmployeeServiceImpl implements EmployeeService {
         } else {
             throw new BadRequestException("department fields must be provided for update");
         }
+        if(employeeDto.getAddress() !=null) {
+            employee.setAddress((employee.getAddress()));
+        } else {
+            throw new BadRequestException("Address fields must be provided for update");
+        }
 
         //save an employee into DB
         Employee savedEmployee = employeeRepository.save(employee);
@@ -166,12 +171,17 @@ public class EmployeeServiceImpl implements EmployeeService {
         } else {
             throw new BadRequestException("department fields must be provided for update");
         }
+        if(employeeDto.getAddress() !=null) {
+            employee.setAddress((employee.getAddress()));
+        } else {
+            throw new BadRequestException("Address fields must be provided for update");
+        }
         // Save the updated employee
         Employee savedEmployee = employeeRepository.save(employee);
 
         return EmployeeMapper.mapToEmployeeDto(savedEmployee);
     }
-    
+
     private void checkForDuplicateEmail(String email, Long id) throws DuplicateEntryException {
         //check email is already present or not
         Employee existingEmployee = employeeRepository.findByEmail(email);
