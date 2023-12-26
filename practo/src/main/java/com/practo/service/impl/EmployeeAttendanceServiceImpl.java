@@ -15,13 +15,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 public class EmployeeAttendanceServiceImpl implements EmployeeAttendanceService {
     private final ModelMapper modelMapper;
     @Autowired
     private EmployeeAttendanceRepository employeeAttendanceRepository;
-
     @Autowired
     public EmployeeAttendanceServiceImpl(ModelMapper modelMapper) {
         this.modelMapper = modelMapper;
@@ -34,20 +34,10 @@ public class EmployeeAttendanceServiceImpl implements EmployeeAttendanceService 
         // Check for duplicate getEmployeeId
         checkForDuplicateEmployeeId(attendanceDTO.getEmployeeId());
         EmployeeAttendance attendance = convertToEntity(attendanceDTO);
-        attendance.setCreatedAt(LocalDateTime.now());
-        attendance.setUpdatedAt(LocalDateTime.now());
+        attendance.setEmaCreatedAt(LocalDateTime.now());
+        attendance.setEmaUpdatedAt(LocalDateTime.now());
         EmployeeAttendance savedAttendance = employeeAttendanceRepository.save(attendance);
         return convertToDTO(savedAttendance);
-    }
-
-    //method to converting from entity to dto
-    private EmployeeAttendanceDTO convertToDTO(EmployeeAttendance savedAttendance) {
-        return modelMapper.map(savedAttendance, EmployeeAttendanceDTO.class);
-    }
-
-    //method to converting from dto to entity
-    private EmployeeAttendance convertToEntity(EmployeeAttendanceDTO attendanceDTO) {
-        return modelMapper.map(attendanceDTO, EmployeeAttendance.class);
     }
 
     // method to check employeeId is already present or not
@@ -55,8 +45,6 @@ public class EmployeeAttendanceServiceImpl implements EmployeeAttendanceService 
 
         //check employeeId is already present or not
         if (employeeAttendanceRepository.existsByEmployeeId(employeeId)) {
-
-            //Handle the case where the employee with the given employeeId is already exist
 
             throw new DuplicateEntryException("employeeId is already present");
         }
@@ -83,9 +71,9 @@ public class EmployeeAttendanceServiceImpl implements EmployeeAttendanceService 
         EmployeeAttendance existingEmployee = employeeAttendanceRepository.findById(id).orElseThrow(
                 () -> new ResourceNotFoundException("Employee not present")
         );
-        existingEmployee.setDate(attendanceDTO.getDate());
-        existingEmployee.setAttendanceStatus(attendanceDTO.getAttendanceStatus());
-        existingEmployee.setUpdatedAt(LocalDateTime.now());
+        existingEmployee.setEmaDate(attendanceDTO.getDate());
+        existingEmployee.setEmaAttendanceStatus(attendanceDTO.getAttendanceStatus());
+        existingEmployee.setEmaUpdatedAt(LocalDateTime.now());
         EmployeeAttendance updatedAttendance = employeeAttendanceRepository.save(existingEmployee);
         return convertToDTO(updatedAttendance);
     }
@@ -95,7 +83,17 @@ public class EmployeeAttendanceServiceImpl implements EmployeeAttendanceService 
     public void deleteEmployeeAttendance(Long id) {
         EmployeeAttendance deleteAttendance = employeeAttendanceRepository.findById(id).orElseThrow(
                 () -> new AttendanceNotFoundException("EmployeeAttendance not found with id " + id));
-
         employeeAttendanceRepository.deleteById(id);
     }
+
+    //method to converting from entity to dto
+    private EmployeeAttendanceDTO convertToDTO(EmployeeAttendance savedAttendance) {
+        return modelMapper.map(savedAttendance, EmployeeAttendanceDTO.class);
+    }
+
+    //method to converting from dto to entity
+    private EmployeeAttendance convertToEntity(EmployeeAttendanceDTO attendanceDTO) {
+        return modelMapper.map(attendanceDTO, EmployeeAttendance.class);
+    }
+
 }

@@ -28,6 +28,7 @@ public class EmployeeAttendanceController {
         EmployeeAttendanceDTO createdAttendance = attendanceService.addEmployeeAttendance(attendanceDTO);
         return new ResponseEntity<>(createdAttendance, HttpStatus.CREATED);
     }
+
     // http://localhost:8080/employeeattendance/all?pageNo=0&pageSize=5&sortBy=id&sortDir=asc
     @GetMapping("/all")
     public ResponseEntity<Page<EmployeeAttendanceDTO>> getAllEmployeeAttendances(@RequestParam(defaultValue = "0") int pageNo,

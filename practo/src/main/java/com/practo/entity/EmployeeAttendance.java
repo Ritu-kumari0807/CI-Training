@@ -16,22 +16,22 @@ import java.time.LocalDateTime;
 public class EmployeeAttendance {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ema_id")
-    private Long id;
+    @Column(name = "EMA_ID")
+    private Long emaId;
 
-    @Column(name = "ema_employeeId")
-    private Long employeeId;
+    @Column(name = "EMA_EMPLOYEEID", insertable = false, updatable = false)
+    private Long emaEmployeeId;
 
-    @Column(name = "ema_date")
-    private LocalDateTime date;
+    @Column(name = "EMA_DATE")
+    private LocalDateTime emaDate;
 
     @Enumerated(EnumType.ORDINAL)
-    @Column(name = "ema_attendance_status")
-    private EmployeeAttendanceStatus attendanceStatus;
+    @Column(name = "EMA_ATTENDANCE_STATUS")
+    private EmployeeAttendanceStatus emaAttendanceStatus;
 
-    @Column(name = "created_at")
-    private LocalDateTime createdAt;
+    @Column(name = "EMA_CREATED_AT")
+    private LocalDateTime emaCreatedAt;
 
-    @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
+    @Column(name = "EMA_UPDATED_AT")
+    private LocalDateTime emaUpdatedAt;
 }

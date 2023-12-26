@@ -16,6 +16,7 @@ import java.util.Objects;
 
 @Data
 public class EmployeeAttendanceDTO {
+
     private Long id;
 
     @NotNull(message = "Employee ID cannot be null")

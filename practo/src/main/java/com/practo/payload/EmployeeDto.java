@@ -1,48 +1,73 @@
 package com.practo.payload;
 
+import com.practo.dictionary.APIErrorCode;
+import com.practo.entity.Employee;
+import com.practo.entity.EmployeeProfile;
+import com.practo.exception.InspireException;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Id;
 import javax.validation.constraints.*;
+import java.util.Set;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class EmployeeDto {
-    @Id
-    private Long id;
 
-    @NotNull(message = "First name should not be null")
-    @NotBlank
-//    @Size(min = 2, max = 50, message = "First name must be between 2 and 50 characters")
-    private String firstName;
+    private Long empId;
 
-    @NotNull(message = "last name should not be null")
-    @Size(min = 2, max = 50, message = "First name must be between 2 and 50 characters")//
-    private String lastName;
+    @Size(min = 2, max = 50, message = "First name must be between 2 and 50 characters")
+    private String empFirstName;
+
+    @Size(min = 2, max = 50, message = "First name must be between 2 and 50 characters")
+    private String empLastName;
 
     @Email(message = "Invalid email format")
-    @NotNull(message = "Email name should not be null")
     @Size(max = 100, message = "Email must be less than 100 characters")
-    private String email;
+    private String empEmail;
 
-    @NotNull(message = "Department cannot be null")
     @Size(max = 50, message = "Department must be less than 50 characters")
-    private String department;
+    private String empDepartment;
 
-    @NotNull(message = "Address cannot be null")
     @Size(max = 10, message = "Address must be less than 100 characters")
-    private String address;
+    private String empAddress;
 
-    @NotNull(message = "phone number cannot be null")
     @Pattern(regexp = "\\d{10}", message = "Phone number must be 10 digits")
-    private String phoneNumber;
+    private String empPhoneNumber;
 
-//    @NotNull(message = "salary cannot be null")
-//    @Positive(message = "Salary must be a positive number")
-    private double salary;
+    private double empSalary;
 
+    private Set<EmployeeProfile> employeeProfile;
+
+    public static void checkForNull(EmployeeDto employeeDto) throws InspireException {
+
+        if (employeeDto.getEmpFirstName() == null)
+            throw new InspireException(APIErrorCode.INVALID_REQUEST, "Employee name should not be null for creation");
+
+        if (employeeDto.getEmpEmail() == null) {
+            throw new InspireException(APIErrorCode.BAD_REQUEST, "Email should be provided for creation");
+        }
+
+        if (employeeDto.getEmpPhoneNumber() == null) {
+            throw new InspireException(APIErrorCode.BAD_REQUEST, "PhoneNumber should be provided for creation");
+        }
+
+        if (employeeDto.getEmpLastName()== null) {
+            throw new InspireException(APIErrorCode.INVALID_REQUEST, "Employee Lastname should not be null for creation");
+        }
+
+        if (employeeDto.getEmpSalary() <= 0) {
+            throw new InspireException(APIErrorCode.INVALID_REQUEST, "Employee salary should not be null for creation");
+        }
+
+        if (employeeDto.getEmpDepartment() == null) {
+            throw new InspireException(APIErrorCode.INVALID_REQUEST, "Employee Department should not be null for creation");
+        }
+        if(employeeDto.getEmpAddress() ==null) {
+            throw new InspireException(APIErrorCode.INVALID_REQUEST, "Employee Address should not be null for creation");
+        }
+}
 }
 
